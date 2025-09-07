@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MediLink - Sistema para Doctores</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">ML</div>
+        <div class="brand-text">
+          <h1>MediLink</h1>
+          <p class="subtitle">Panel clínico integral</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="btn ghost" title="Cambiar tema">🌓</button>
+        <div class="user-info">
+          <span id="currentUserName">Dra. García</span>
+          <span class="user-role">Medicina Interna</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <nav>
+          <button class="nav-link active" data-section="dashboard">🏠 Panel</button>
+          <button class="nav-link" data-section="dept-chat">💬 Chat Departamentos</button>
+          <button class="nav-link" data-section="patient-chat">👥 Pacientes</button>
+          <button class="nav-link" data-section="appointments">🗓️ Citas</button>
+          <button class="nav-link" data-section="ai-analysis">🧠 Análisis IA</button>
+          <button class="nav-link" data-section="guide">📘 Guía</button>
+        </nav>
+        <div class="sidebar-foot">
+          <button id="clearDemoData" class="btn tiny danger">Reiniciar datos</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <!-- Dashboard -->
+        <section id="dashboard" class="section visible">
+          <div class="section-header">
+            <h2>Actividad reciente</h2>
+            <span class="hint">Actualizado en tiempo real</span>
+          </div>
+          <div id="activityFeed" class="card list activity"></div>
+        </section>
+
+        <!-- Chat Departamentos -->
+        <section id="dept-chat" class="section">
+          <div class="section-header">
+            <h2>Chat interno entre departamentos</h2>
+            <div class="row gap">
+              <select id="deptSelect" class="input">
+                <option value="Medicina Interna">Medicina Interna</option>
+                <option value="Radiología">Radiología</option>
+                <option value="Laboratorio">Laboratorio</option>
+                <option value="Urgencias">Urgencias</option>
+                <option value="Cardiología">Cardiología</option>
+              </select>
+              <button id="switchDept" class="btn">Cambiar mi departamento</button>
+            </div>
+          </div>
+          <div class="chat card">
+            <div id="deptMessages" class="messages"></div>
+            <div class="composer">
+              <input id="deptText" class="input flex-1" placeholder="Escribe un mensaje para otros departamentos...">
+              <input id="deptFile" type="file" class="file-input" multiple>
+              <button id="sendDept" class="btn primary">Enviar</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pacientes / Chat y Citas -->
+        <section id="patient-chat" class="section">
+          <div class="section-header between">
+            <h2>Comunicación con pacientes</h2>
+            <div class="row gap">
+              <select id="patientSelect" class="input">
+                <option value="p1">Juan Pérez</option>
+                <option value="p2">Ana López</option>
+                <option value="p3">Carlos Ruiz</option>
+              </select>
+              <button id="newPatient" class="btn ghost">Añadir paciente</button>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="chat card">
+              <div id="patientMessages" class="messages"></div>
+              <div class="composer">
+                <input id="patientText" class="input flex-1" placeholder="Mensaje al paciente...">
+                <input id="patientFile" type="file" class="file-input" multiple>
+                <button id="sendPatient" class="btn primary">Enviar</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Agendar cita</h3>
+              <div class="scheduler">
+                <input id="apptDate" type="date" class="input">
+                <select id="apptTime" class="input"></select>
+                <select id="apptMode" class="input">
+                  <option value="Presencial">Presencial</option>
+                  <option value="Videollamada">Videollamada</option>
+                </select>
+                <button id="createAppt" class="btn">Proponer cita</button>
+              </div>
+              <div>
+                <h4>Citas para este paciente</h4>
+                <div id="patientAppointments" class="list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Citas -->
+        <section id="appointments" class="section">
+          <div class="section-header between">
+            <h2>Calendario de citas</h2>
+            <div class="row gap">
+              <input id="filterApptDate" type="date" class="input">
+              <button id="todayBtn" class="btn ghost">Hoy</button>
+            </div>
+          </div>
+          <div id="calendar" class="calendar card"></div>
+        </section>
+
+        <!-- Análisis IA -->
+        <section id="ai-analysis" class="section">
+          <div class="section-header">
+            <h2>Análisis de Resultados y Diagnóstico (IA)</h2>
+            <span class="hint">Explicaciones generadas con reglas y lenguaje natural</span>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <h3>Datos del paciente</h3>
+              <div class="form">
+                <label>Edad</label>
+                <input id="aiAge" type="number" min="0" class="input" placeholder="Ej. 45">
+                <label>Síntomas (texto libre)</label>
+                <textarea id="aiSymptoms" class="input" rows="4" placeholder="Ej. fiebre, tos seca, cansancio..."></textarea>
+                <label>Resultados de laboratorio (JSON simple)</label>
+                <textarea id="aiLabs" class="input" rows="6" placeholder='Ej. {"PCR": 18, "Leucocitos": 13000, "Glucosa": 110}'></textarea>
+                <button id="runAI" class="btn primary">Analizar</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Informe</h3>
+              <div id="aiOutput" class="ai-output"></div>
+              <div class="row end">
+                <button id="saveAIReport" class="btn">Guardar en actividad</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Guía -->
+        <section id="guide" class="section">
+          <div class="section-header">
+            <h2>Guía rápida de uso</h2>
+          </div>
+          <div class="card">
+            <ol class="guide">
+              <li>Use el panel para ver actividad de chats, citas y análisis.</li>
+              <li>En Chat Departamentos, comparta hallazgos y adjuntos entre áreas.</li>
+              <li>En Pacientes, envíe mensajes y proponga citas desde el panel lateral.</li>
+              <li>En Citas, filtre por fecha y vea el calendario general.</li>
+              <li>En Análisis IA, pegue resultados y síntomas para obtener un informe.</li>
+              <li>Use el botón Reiniciar datos para limpiar la demo local.</li>
+            </ol>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="app-footer">
+      <span>© 2025 MediLink Demo</span>
+      <span class="muted">Datos locales, sin servidor</span>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
